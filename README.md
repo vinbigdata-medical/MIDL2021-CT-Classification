@@ -12,7 +12,7 @@ This repository contains the training code for our paper entitled "A Novel Metho
  Image read from raw .dcm file needs to be processed as followed:
  
  - Convert pixel values to HU standards using formula: 
- $$newValue = RescaleSlope * pixelValue + RescaleIntercept$$ 
+ newValue = RescaleSlope * pixelValue + RescaleIntercept 
  > **RescaleSlope** and **RescaleIntercept** can be extracted from the metadata  .dcm file
  - Apply HU window to the image with window_width=400, window_center=50 
 
@@ -68,4 +68,5 @@ Table: Slice-wise performance on the our validation set of 79,250 slices from 28
 |-------------------------------|-----------------|
 | Random sampling (30 slices)	| 0.9354          |
 | 3DSE (Our implemetation)	    | 0.9043 		  |
+
 Table: Scan-wise performance on the our validation set of 282 scans 
