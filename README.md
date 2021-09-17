@@ -1,4 +1,3 @@
-
 # A Novel Method for Classification of Multi-phase Abdominal CT Scans Using Deep Learning and Random Sampling
 
 This repository contains the training code for our paper entitled "A Novel Method for Classification of Multi-phase Abdominal CT Scans Using Deep Learning and Random Sampling", which was submitted and under review by [Medical Imaging with Deep Learning 2021 (MIDL2021)](https://2021.midl.io/).
@@ -55,18 +54,3 @@ Command to evaluate the 3D model:
 ```
 python main3d.py --config "PATH_TO_CONFIG_FILE" --load "PATH_TO_MODEL_CHECKPOINT" --mode "VALID_OR_TEST"
 ```
-
-## Performance 
-
-| Models     | F1 score		    |
-|------------|------------------|
-| ResNet-18  | 0.9060           |
-
-Table: Slice-wise performance on the our validation set of 79,250 slices from 282 scans
-
-| Models     	   			    | F1 score		  |
-|-------------------------------|-----------------|
-| Random sampling (30 slices)	| 0.9354          |
-| 3DSE (Our implemetation)	    | 0.9043 		  |
-
-Table: Scan-wise performance on the our validation set of 282 scans 
