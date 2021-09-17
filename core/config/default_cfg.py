@@ -15,7 +15,7 @@ _C.VERSION = "0.1"
 _C.SYSTEM = CN()
 
 # Number of workers for dataloader
-_C.SYSTEM.NUM_WORKERS = 8
+_C.SYSTEM.NUM_WORKERS = 2
 # Use GPU for training and inference. Default is True
 _C.SYSTEM.GPU = True
 # Random seed for seeding everything (NumPy, Torch,...)
@@ -32,7 +32,7 @@ _C.SYSTEM.OPT_L = "O2"
 _C.DIRS = CN()
 
 # Train, Validation and Testing image folders
-_C.DIRS.DATA = './Split_data'
+_C.DIRS.DATA = "./Split_data"
 # Trained weights folder
 _C.DIRS.WEIGHTS = "./weights/"
 # Inference output folder
@@ -51,7 +51,7 @@ _C.DATA.DEBUG = False
 # Image input channel for training
 _C.DATA.INP_CHANNEL = 3
 # Image Width and Height for training
-_C.DATA.SIZE = (512,512)
+_C.DATA.SIZE = (512, 512)
 _C.DATA.NORMALIZE = False
 # For CSV loading dataset style
 # If dataset is contructed as folders with one class for each folder, see ImageFolder dataset style
@@ -85,7 +85,6 @@ _C.TRAIN.NUM_CYCLES = 1
 _C.TRAIN.EPOCHES = 100
 # Training batchsize
 _C.TRAIN.BATCH_SIZE = 200
-
 
 
 # ----------------------------------------
@@ -136,15 +135,17 @@ _C.MODEL.NAME = "resnet18"
 # Load ImageNet pretrained weights
 _C.MODEL.PRETRAINED = True
 # Classification head
-_C.MODEL.CLS_HEAD = 'linear'
+_C.MODEL.CLS_HEAD = "linear"
 # Number of classification class
 _C.MODEL.NUM_CLASSES = 3
 
+
 def get_cfg_defaults():
-  """Get a yacs CfgNode object with default values for my_project."""
-  # Return a clone so that the defaults will not be altered
-  # This is for the "local variable" use pattern
-  return _C.clone()
+    """Get a yacs CfgNode object with default values for my_project."""
+    # Return a clone so that the defaults will not be altered
+    # This is for the "local variable" use pattern
+    return _C.clone()
+
 
 # Alternatively, provide a way to import the defaults as
 # a global singleton:

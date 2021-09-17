@@ -1,13 +1,14 @@
-from tqdm import tqdm 
+from tqdm import tqdm
 
 import torch
-from torch.cuda.amp import autocast   
+from torch.cuda.amp import autocast
 
 from core.utils import AverageMeter
 
-def train_loop(cfg, epoch, model, dataloader, 
-                criterion, scheduler, optimizer,
-                scaler, writer):
+
+def train_loop(
+    cfg, epoch, model, dataloader, criterion, scheduler, optimizer, scaler, writer
+):
     """Run 1 training epoch
 
     Args:
@@ -25,9 +26,8 @@ def train_loop(cfg, epoch, model, dataloader,
         average_loss (float): Averaged loss over all iteration in one training epoch
     """
 
-
     # Declare variables
-    print(f'\nEpoch: {epoch + 1}')
+    print(f"\nEpoch: {epoch + 1}")
     gpu = cfg.SYSTEM.GPU
     losses = AverageMeter()
     model.train()
@@ -35,11 +35,12 @@ def train_loop(cfg, epoch, model, dataloader,
     tbar = tqdm(dataloader)
     for i, (filename, study_ID, seriesNumber, image, target) in enumerate(tbar):
         image = image.float()
-        
+
         if gpu:
-            image, target = image.cuda(), target.cuda()
-            output = model(image)
-            loss = criterion(output, target)
+            with autocast():
+                image, target = image.cuda(), target.cuda()
+                output = model(image)
+                loss = criterion(output, target)
 
         # Optimizer Step
         scaler.scale(loss).backward()
@@ -52,10 +53,11 @@ def train_loop(cfg, epoch, model, dataloader,
 
         # Record loss
         losses.update(loss.item() * cfg.SOLVER.GD_STEPS, target.size(0))
-        tbar.set_description("Train loss: %.9f, learning rate: %.6f" % (
-            losses.avg, optimizer.param_groups[-1]['lr']))
-    
-    
+        tbar.set_description(
+            "Train loss: %.9f, learning rate: %.6f"
+            % (losses.avg, optimizer.param_groups[-1]["lr"])
+        )
+
     # print("Train loss: %.9f, learning rate: %.6f" %
     #        (losses.avg, optimizer.param_groups[-1]['lr']))
 

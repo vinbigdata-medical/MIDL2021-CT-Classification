@@ -1,0 +1,50 @@
+NAME: EfficientNet_b2_224
+
+SYSTEM:
+  GPU: True
+
+DIRS:
+  DATA: './Split_data'
+  WEIGHTS: './weights/'
+  OUTPUTS: './outputs/'
+  LOGS: './logs/'
+
+DATA:
+  DEBUG: False
+  INP_CHANNEL: 3
+  SIZE: (224, 224)
+
+  CSV:
+    TRAIN: "Split_data/data/train.csv"
+    # VALID: "Split_data/data/valid.csv"
+    VALID: "Split_data/data/valid_drop.csv"
+    # VALID: "Split_data/data_external_TCGA-KIRC/test.csv"
+    # VALID: "Split_data/data_external_CPTAC_CCRCC/test.csv"
+    # VALID: "Split_data/data_external_QinLung/test.csv"
+    # VALID: "Split_data/data_external_NSCLC/test.csv"
+    # VALID: "Split_data/data_external_LITS/test.csv"
+    # VALID: "Split_data/data_external_LITS_anal/test.csv"
+    TEST: "Split_data/data/valid.csv"
+
+TRAIN:
+  NUM_CYCLES: 1
+  EPOCHES: 30
+  BATCH_SIZE: 100
+
+SOLVER:
+  OPTIMIZER: 'adam'
+  SCHEDULER: 'cyclical'
+  WARMUP_LENGTH: 0
+  GD_STEPS: 1
+  BASE_LR: 1e-2
+  WEIGHT_DECAY: 1e-2
+  WEIGHT_DECAY_BIAS: 0.0
+  
+LOSS:
+  NAME: 'ce'
+  WEIGHTED_LOSS: False
+
+MODEL:
+  NAME: "efficientnet_b2"
+  PRETRAINED: False
+  NUM_CLASSES: 4

@@ -1,0 +1,43 @@
+NAME: Resnet_34
+
+SYSTEM:
+  GPU: True
+
+DIRS:
+  DATA: './Split_data'
+  WEIGHTS: './weights/'
+  OUTPUTS: './outputs/'
+  LOGS: './logs/'
+
+DATA:
+  DEBUG: False
+  INP_CHANNEL: 3
+  SIZE: (128, 128)
+
+  CSV:
+    TRAIN: "Split_data/data/train.csv"
+    VALID: "Split_data/data/valid.csv"
+    TEST: "Split_data/data/valid.csv"
+
+TRAIN:
+  NUM_CYCLES: 1
+  EPOCHES: 15
+  BATCH_SIZE: 128
+
+SOLVER:
+  OPTIMIZER: 'adam'
+  SCHEDULER: 'cyclical'
+  WARMUP_LENGTH: 0
+  GD_STEPS: 1
+  BASE_LR: 1e-3
+  WEIGHT_DECAY: 1e-2
+  WEIGHT_DECAY_BIAS: 0.0
+  
+LOSS:
+  NAME: 'ce'
+  WEIGHTED_LOSS: False
+
+MODEL:
+  NAME: "resnet34"
+  PRETRAINED: False
+  NUM_CLASSES: 4

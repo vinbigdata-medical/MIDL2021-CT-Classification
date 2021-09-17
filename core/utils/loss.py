@@ -1,5 +1,6 @@
 from torch import nn
 
+
 def build_loss_func(cfg):
     """Create loss function
 

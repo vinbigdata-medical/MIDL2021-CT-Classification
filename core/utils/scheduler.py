@@ -10,6 +10,7 @@ class WarmupMultiStepLR(_LRScheduler):
 
     https://github.com/facebookresearch/maskrcnn-benchmark/blob/master/maskrcnn_benchmark/solver/lr_scheduler.py
     """
+
     def __init__(
         self,
         optimizer,
@@ -73,13 +74,18 @@ class WarmupCyclicalLR(object):
         warmup_epochs (int): number of epochs to gradually increase learning rate from zero to base_lr.
     """
 
-    def __init__(self, mode, base_lr, num_epochs, iters_per_epoch=0,
-                 lr_step=0, warmup_epochs=0):
+    def __init__(
+        self, mode, base_lr, num_epochs, iters_per_epoch=0, lr_step=0, warmup_epochs=0
+    ):
         self.mode = mode
-        assert self.mode in ('cos', 'poly', 'step'), "Unsupported learning rate scheduler"
+        assert self.mode in (
+            "cos",
+            "poly",
+            "step",
+        ), "Unsupported learning rate scheduler"
 
         self.lr = base_lr
-        if mode == 'step':
+        if mode == "step":
             assert lr_step
         self.lr_step = lr_step
         self.iters_per_epoch = iters_per_epoch
@@ -89,11 +95,11 @@ class WarmupCyclicalLR(object):
 
     def __call__(self, optimizer, i, epoch):
         T = epoch * self.iters_per_epoch + i
-        if self.mode == 'cos':
+        if self.mode == "cos":
             lr = 0.5 * self.lr * (1 + math.cos(1.0 * T / self.N * math.pi))
-        elif self.mode == 'poly':
+        elif self.mode == "poly":
             lr = self.lr * pow((1 - 1.0 * T / self.N), 0.9)
-        elif self.mode == 'step':
+        elif self.mode == "step":
             lr = self.lr * (0.1 ** (epoch // self.lr_step))
 
         # warm-up lr scheduler
@@ -105,21 +111,27 @@ class WarmupCyclicalLR(object):
 
     def _adjust_learning_rate(self, optimizer, lr):
         for i in range(len(optimizer.param_groups)):
-            optimizer.param_groups[i]['lr'] = lr
+            optimizer.param_groups[i]["lr"] = lr
 
 
 def build_scheduler(args, iter_per_epoch, cfg):
     if cfg.SOLVER.SCHEDULER == "cyclical":
-        scheduler = WarmupCyclicalLR("cos", cfg.SOLVER.BASE_LR, cfg.TRAIN.EPOCHES,
-                                    iters_per_epoch=iter_per_epoch,
-                                    warmup_epochs=cfg.SOLVER.WARMUP_LENGTH)
+        scheduler = WarmupCyclicalLR(
+            "cos",
+            cfg.SOLVER.BASE_LR,
+            cfg.TRAIN.EPOCHES,
+            iters_per_epoch=iter_per_epoch,
+            warmup_epochs=cfg.SOLVER.WARMUP_LENGTH,
+        )
     elif cfg.SOLVER.SCHEDULER == "step":
         scheduler = WarmupMultiStepLR(
             optimizer=optimizer,
             milestones=cfg.TRAIN.EPOCHES[:-1],
             iter_per_epoch=iter_per_epoch,
-            warmup_factor=cfg.SOLVER.BASE_LR/(cfg.SOLVER.WARMUP_LENGTH * iter_per_epoch),
-            warmup_iters=cfg.SOLVER.WARMUP_LENGTH * iter_per_epoch)
+            warmup_factor=cfg.SOLVER.BASE_LR
+            / (cfg.SOLVER.WARMUP_LENGTH * iter_per_epoch),
+            warmup_iters=cfg.SOLVER.WARMUP_LENGTH * iter_per_epoch,
+        )
     else:
         scheduler = None
 

@@ -13,10 +13,11 @@ import os
 # SET UP GLOBAL VARIABLE
 scaler = GradScaler()
 
+
 def main(cfg, args):
     # Setup logger
-    sum_writer = SummaryWriter(f'test2')
-    
+    sum_writer = SummaryWriter(f"test2")
+
     # Declare variables
     best_metric = 0
     start_epoch = 0
@@ -27,9 +28,9 @@ def main(cfg, args):
         os.mkdir(cfg.DIRS.WEIGHTS)
 
     # Load Data
-    trainloader = build_dataloader_3d(cfg, mode='train')
-    validloader = build_dataloader_3d(cfg, mode='valid')
-    testloader = build_dataloader_3d(cfg, mode='test')
+    trainloader = build_dataloader_3d(cfg, mode="train")
+    validloader = build_dataloader_3d(cfg, mode="valid")
+    testloader = build_dataloader_3d(cfg, mode="test")
 
     # Define model/loss/optimizer/Scheduler
     model = build_model(cfg)
@@ -43,24 +44,38 @@ def main(cfg, args):
         model = model.cuda()
 
     # Run Script
-    if mode == 'train':
+    if mode == "train":
         for epoch in range(start_epoch, cfg.TRAIN.EPOCHES):
-            train_loss = train_loop(cfg, epoch, model, trainloader, \
-                                    loss, scheduler, optimizer, scaler, sum_writer)
-            valid_loss, best_metric = valid_model(cfg, mode, epoch, model, validloader, 
-                                    loss, sum_writer, best_metric=best_metric)
-            # Recored loss to TensorBoard
-            sum_writer.add_scalars('losses check', {
-                'train_loss': train_loss,
-                'valid_loss': valid_loss,
-            }, epoch)
-    elif mode == 'valid':
-        valid_model(cfg, mode, 0, model, validloader, \
-                    loss, sum_writer, best_metric=best_metric)
-    elif mode == 'test':
+            train_loss = train_loop(
+                cfg,
+                epoch,
+                model,
+                trainloader,
+                loss,
+                scheduler,
+                optimizer,
+                scaler,
+                sum_writer,
+            )
+            best_metric = valid_model(
+                cfg,
+                mode,
+                epoch,
+                model,
+                validloader,
+                loss,
+                sum_writer,
+                best_metric=best_metric,
+            )
+    elif mode == "valid":
+        valid_model(
+            cfg, mode, 0, model, validloader, loss, sum_writer, best_metric=best_metric
+        )
+    elif mode == "test":
         test_model(cfg, mode, model, testloader, loss)
-    
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     # Set up Variable
     seed = 10
 
@@ -70,7 +85,6 @@ if __name__ == '__main__':
     if args.config != "":
         cfg.merge_from_file(args.config)
 
-    
     # Set seed for reproducible result
     setup_determinism(seed)
 
